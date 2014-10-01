@@ -88,6 +88,9 @@ void GLView::mousePressEvent(QMouseEvent *event) {
   if (event->button()==Qt::RightButton) {
     cout << "right mouse : " << event->x() << "," << event->y() << endl;
   }
+  // ajout du point
+  this->courbe.addPoint(Vector2(event->x(), event->y()));
+
 }
 
 void GLView::mouseMoveEvent(QMouseEvent *event) {
@@ -151,6 +154,7 @@ void GLView::keyReleaseEvent(QKeyEvent *event) {
   init/update data
   **/
 void GLView::initData() {
+
 }
 
 void GLView::updateData() {
@@ -223,6 +227,16 @@ void GLView::drawChoice1() {
   glPopMatrix();
 }
 
+void GLView::drawCourbe() {
+    ugl::drawText("draw Courbe :",0,0);
+
+    glPushMatrix();
+    glColor3f(1,0,0);
+    glLineWidth(3);
+    this->courbe.draw(this->width(), this->height());
+    glPopMatrix();
+}
+
 void GLView::paintGL() {
   /// clears the window
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -238,8 +252,12 @@ void GLView::paintGL() {
       /// call the drawing method for the clicked button 1 ...
       drawChoice1();
       break;
+  case 2 :
+    /// dessine la courbe
+      drawCourbe();
+      break;
   }
-
+    glFlush();
 }
 
 /** ********************************************************************** **/

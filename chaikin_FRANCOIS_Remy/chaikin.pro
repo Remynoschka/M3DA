@@ -50,11 +50,15 @@ SOURCES += \
     src/MainWindow.cpp \
     src/main.cpp \
     src/GLView.cpp \
-    src/Error.cpp
+    src/Error.cpp \
+    src/Courbe.cpp \
+    src/Vector2.cpp
 
 HEADERS += \
     src/UtilGL.h \
     src/MainWindow.h \
     src/GLView.h \
     src/glsupport.h \
-    src/Error.h
+    src/Error.h \
+    src/Courbe.h \
+    src/Vector2.h

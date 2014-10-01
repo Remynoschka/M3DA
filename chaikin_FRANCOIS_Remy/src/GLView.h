@@ -14,6 +14,7 @@
 
 #include "UtilGL.h"
 #include <QtEvents>
+#include "Courbe.h"
 
 
 /**
@@ -58,11 +59,15 @@ protected:
   // drawing choice
   void drawChoice0();
   void drawChoice1();
+  void drawCourbe();
+
   // etc ... void drawChoice2();
 
 private:
   int _choice;
   std::string _choiceText;
+  //
+  Courbe courbe;
 
 signals:
 

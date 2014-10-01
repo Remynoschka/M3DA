@@ -43,7 +43,7 @@ MainWindow::MainWindow() :
   _choice.clear();
   _choice.push_back(new QPushButton("draw something")); // choice 0
   _choice.push_back(new QPushButton("draw a square")); // choice 1
-  _choice.push_back(new QPushButton("...")); // ...
+  _choice.push_back(new QPushButton("Courbe")); // ...
 
 
   // set up for the main window : set a central widget (main container), and set a gridLayout to this central widget
@@ -61,7 +61,7 @@ MainWindow::MainWindow() :
   // update GLWidget every 20ms
   QTimer *timer=new QTimer(this);
   connect(timer,SIGNAL(timeout()),_glView,SLOT(updateData())); // calls GLView::update() (that will call paintGL() )
-  timer->start(0);
+  timer->start(20);
 
   if (!_choice.empty()) _choice[0]->click();
 
