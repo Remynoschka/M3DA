@@ -248,9 +248,11 @@ void GLApplication::pathSegment() {
     //    _inputPath.push_back(Vector3(0,0,-2));
     //    _inputPath.push_back(Vector3(0,0,2));
 
-    _inputPath.clear();
-    _inputPath.push_back(Vector3(-2,0,-2));
-    _inputPath.push_back(Vector3(2,0,2));
+        _inputPath.clear();
+        _inputPath.push_back(Vector3(-2,0,-2));
+        _inputPath.push_back(Vector3(2,0,2));
+
+    //_inputPath.clear(); _inputPath.push_back(Vector3(-2,0,-2)); _inputPath.push_back(Vector3(0,0,2)); _inputPath.push_back(Vector3(2,0,-1));
 }
 
 void GLApplication::pathCircle() {
@@ -333,10 +335,12 @@ void GLApplication::drawSpline() {
 
 Vector3 GLApplication::transform(const Vector3 &p,const Vector3 &n) {
     Vector3 result;
+
     double x = p.x() + n.x();
     double y = p.y() + n.y();
     double z = p.z();
     result = Vector3(x,y,z);
+
     return result;
 }
 
@@ -389,6 +393,7 @@ void GLApplication::extrudeLineStrip() {
             p = transform(p, _inputPath.at(i));
 
             _extrude.push_back(p);
+
         }
 
     }
