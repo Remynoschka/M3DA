@@ -335,10 +335,16 @@ void GLApplication::drawSpline() {
 
 Vector3 GLApplication::transform(const Vector3 &p,const Vector3 &n) {
     Vector3 result;
-
-    double x = p.x() + n.x();
+    double x = p.x() + n.x() ;
     double y = p.y() + n.y();
-    double z = p.z();
+    double z = n.z() -(p.x() * n.x() + p.y() * n.y())/n.z();
+    //x1*x2 + y1*y2 + z1*z2 = 0
+    //x1*x2 + y1*y2 = - z1*z2
+    //- (x1*x2 + y1*y2) /z1 = z2
+
+
+    cout << x << "/"<< y << "/" << z << endl;
+
     result = Vector3(x,y,z);
 
     return result;
