@@ -14,7 +14,7 @@
 
 #include "UtilGL.h"
 #include <QtEvents>
-
+#include "nurbs.h"
 
 /**
   @class GLView
@@ -58,6 +58,7 @@ protected:
   // drawing choice
   void drawChoice0();
   void drawChoice1();
+  void drawBSpline();
   // etc ... void drawChoice2();
 
 private:

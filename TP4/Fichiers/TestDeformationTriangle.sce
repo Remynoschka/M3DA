@@ -1,17 +1,17 @@
 getd();
-/// définition de la géométrie
+/// dÃ©finition de la gÃ©omÃ©trie
 P1=[0;0;0];
 P2=[10;0;0];
 P3=[5;6.6;0];
 
-/// définition de la topologie
+/// dÃ©finition de la topologie
 t1 = [1;2;3];
 
 /// tableaux 
 noeuds=[P1 P2 P3];
 elements=[t1];
 
-/// On suppose qu'on connait le déplacement aux noeuds
+/// On suppose qu'on connait le dÃ©placement aux noeuds
 U1=[2;1;0];
 U2=[2;1;0];
 U3=[2;1;0];
@@ -20,10 +20,10 @@ U = [U1(1); U1(2) ;U2(1); U2(2); U3(1); U3(2)];
 
 
 /// on calcule la deformation
-[K,C,B] = KtriangleSimple(P1,P2,P3,0,0);
+[K,C,B] = KtriangleSimple(P1,P2,P3,100,0.3);
 
 Epsilon = B * U
-
+Sigma = C * U
 
 /// on prend un point appartenant au triangle
 x=4;

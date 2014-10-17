@@ -34,17 +34,17 @@ B = [b1,0,b2,0,b3,0;
     c1,b1,c2,b2,c3,b3];
 
 //// loi de hooke:
-//C = 
+C = E/(1-Poisson*Poisson) * [1 Poisson 0; Poisson 1 0;0 0 (1-Poisson)/2]
 //
 //// Aire du triangle:
-//Aire=
+Aire= det(Matrice)/2
 
 
 //// Matrice de raideur de l'élément:
-Kelement = zeros(6,6);
+Kelement = Aire * (B' * C * B)
 
 //// Matrice de contrainte de l'élément:
-Cont = zeros(3,6);
+Cont = C*B
 
 endfunction
 
