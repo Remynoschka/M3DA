@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <GL/gl.h>
+#include "Vector2.h"
 
 using namespace std;
 
@@ -13,10 +14,15 @@ public:
     Nurbs();
     int degre;
     vector<double> nodalVector;
+    vector<Vector2> controlPoints;
 
     void initializeNodalVector(int nbPoints, int degre);
-    double evaluate(int p, int k, int t);
+    double evaluate(int p, int k, double t);
     void drawN(int k, int p);
+    void drawAllN(int p);
+    void addControlPoint(Vector2 point);
+    void drawBSpline();
+    Vector2 evalBSpline(double t);
 };
 
 #endif // NURBS_H

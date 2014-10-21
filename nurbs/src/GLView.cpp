@@ -223,11 +223,26 @@ void GLView::drawChoice1() {
     glPopMatrix();
 }
 
-void GLView::drawBSpline(){
+void GLView::drawFuncBSpline(){
     Nurbs * n = new Nurbs();
     int degre = 2;
     n->initializeNodalVector(3,degre);
-    n->drawN(2,degre);
+    //n->drawN(2,degre);
+    n->drawAllN(degre);
+}
+
+void GLView::drawBSpline(){
+    Nurbs * n = new Nurbs();
+    int degre = 2;
+    n->initializeNodalVector(0,degre);
+
+    n->addControlPoint(Vector2(0.1,0.1));
+    n->addControlPoint(Vector2(0.15,0.25));
+    n->addControlPoint(Vector2(0.22,0.34));
+    n->addControlPoint(Vector2(0.31,0.27));
+    n->addControlPoint(Vector2(0.25,0.10));
+
+    n->drawBSpline();
 }
 
 void GLView::paintGL() {
@@ -239,11 +254,11 @@ void GLView::paintGL() {
     switch(_choice) {
     case 0:
         /// call the drawing method for the clicked button 0 ...
-        drawBSpline();
+        drawFuncBSpline();
         break;
     case 1:
         /// call the drawing method for the clicked button 1 ...
-        drawChoice1();
+        drawBSpline();
         break;
     case 2:
 

@@ -58,6 +58,7 @@ protected:
   // drawing choice
   void drawChoice0();
   void drawChoice1();
+  void drawFuncBSpline();
   void drawBSpline();
   // etc ... void drawChoice2();
 
