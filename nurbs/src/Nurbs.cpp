@@ -8,11 +8,20 @@ Nurbs::Nurbs()
 
 void Nurbs::initializeNodalVector(int nbPoints, int degre){
     this->degre = degre;
+    nodalVector.clear();
     for (int i = 0 ; i < nbPoints + degre + 1 ; i++){
         this->nodalVector.push_back(i+1);
     }
 }
 
+/**
+ * Part1 / Q2
+ * @brief Nurbs::evaluate
+ * @param p : degre
+ * @param k : indice
+ * @param t : valeur
+ * @return
+ */
 double Nurbs::evaluate(int p, int k, double t){
     //   cout << "evaluate " << p <<"/"<< k << "/"<<t << "/" << nodalVector.at(k) <<endl;
     if (p == 0){
@@ -40,7 +49,7 @@ double Nurbs::evaluate(int p, int k, double t){
 /**
  *PART1/Q3
  * @brief Nurbs::drawN
- * @param k
+ * @param k : indice
  * @param p : degre
  */
 void Nurbs::drawN(int k, int p){
@@ -93,7 +102,7 @@ void Nurbs::drawAllN(int p){
 /**
  * PART1/Q7
  * @brief addControlPoint :ajoute un point de controle
- * @param point
+ * @param point : point a ajoute
  */
 void Nurbs::addControlPoint(Vector2 point){
     this->controlPoints.push_back(point);
@@ -101,12 +110,12 @@ void Nurbs::addControlPoint(Vector2 point){
 }
 
 /**
- *PART1/Q7
+ *PART1/Q7Q9
  * @brief drawBSpline : dessine la BSpline avec son polygone de controle
  */
 void Nurbs::drawBSpline(){
     glPushMatrix();
-    glOrtho(0,1,-1,1,-1,1);
+    glOrtho(-1,1,-1,1,-1,1);
 
     //dessin des points de controle
     glPointSize(3);
@@ -121,7 +130,7 @@ void Nurbs::drawBSpline(){
     glColor3f(1,0,0);
     glBegin(GL_LINE_STRIP);
     for (int i = 0 ; i < controlPoints.size() ; i++){
-        glVertex2f(controlPoints.at(i).getX(), controlPoints.at(i).getY());
+        glVertex2d(controlPoints.at(i).getX(), controlPoints.at(i).getY());
     }
     glEnd();
 
@@ -130,15 +139,25 @@ void Nurbs::drawBSpline(){
     glBegin(GL_LINE_STRIP);
     int tmin = nodalVector.at(degre);
     int tmax = nodalVector.at(controlPoints.size());
-    for (double t = tmin; t < tmax; t+=0.1) {
-
+    // cout << tmin << "/" << tmax << endl;
+    for (double t = tmin; t <= tmax; t+=0.1) {
+        Vector2 point = evalBSpline(t);
+        glVertex2d(point.getX(), point.getY());
     }
     glEnd();
+
+
     glFlush();
     glPopMatrix();
 
 }
 
+/**
+ *PART1/Q8
+ * @brief Nurbs::evalBSpline
+ * @param t : valeur a calculee
+ * @return la somme du calcul de la courbe
+ */
 Vector2 Nurbs::evalBSpline(double t){
     Vector2 sum = Vector2(0,0);
     for (int k = 0 ; k < controlPoints.size() ; k++){
@@ -146,3 +165,49 @@ Vector2 Nurbs::evalBSpline(double t){
     }
     return sum;
 }
+
+/**
+ * PART1/Q10
+ * @brief Nurbs::drawAnimation : dessine le point de l'animation sur la B-Spline
+ * @param time : le temps correspondant de l'animation
+ */
+void Nurbs::drawAnimationBSpline(double time){
+    double tmin = nodalVector.at(degre);
+    glPushMatrix();
+    glBegin(GL_POINTS);
+    glOrtho(-1,1,-1,1,-1,1);
+    glPointSize(5);
+    glColor3f(1,0,1);
+    // anim b-spline
+    Vector2 point = evalBSpline(tmin + time);
+    glVertex2d(point.getX(), point.getY());
+
+    glEnd();
+    glFlush();
+    glPopMatrix();
+}
+
+/**
+ * Part1/Q10
+ * @brief Nurbs::drawAnimationN : dessine le point de l'animation sur la fonction
+ * @param time : le temps correspondant
+ */
+void Nurbs::drawAnimationN(double time){
+    glPushMatrix();
+    glOrtho(0,1,-1,1,-1,1);
+    glBegin(GL_POINTS);
+    glPointSize(5);
+    glColor3f(1,0,1);
+    double tmin = nodalVector.at(0);
+    for (int k = 0 ; k < nodalVector.size()-degre-1; k++){
+        for (double t = tmin+k; t < tmin+k+degre+1 ; t+=0.1){
+            double y = evaluate(degre,k,t);
+            double x = (t) / nodalVector.size() / 2;
+            glVertex2d(x,y);
+        }
+    }
+    glEnd();
+    glFlush();
+    glPopMatrix();
+}
+

@@ -18,11 +18,13 @@ public:
 
     void initializeNodalVector(int nbPoints, int degre);
     double evaluate(int p, int k, double t);
+    Vector2 evalBSpline(double t);
     void drawN(int k, int p);
     void drawAllN(int p);
     void addControlPoint(Vector2 point);
     void drawBSpline();
-    Vector2 evalBSpline(double t);
+    void drawAnimationBSpline(double time);
+    void drawAnimationN(double time);
 };
 
 #endif // NURBS_H

@@ -60,11 +60,13 @@ protected:
   void drawChoice1();
   void drawFuncBSpline();
   void drawBSpline();
+  void drawAnimation();
   // etc ... void drawChoice2();
 
 private:
   int _choice;
   std::string _choiceText;
+  double time;
 
 signals:
 

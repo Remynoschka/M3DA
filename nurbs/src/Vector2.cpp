@@ -1,16 +1,21 @@
 #include "Vector2.h"
 
+Vector2::Vector2(){
+    this->x = 0;
+    this->y = 0;
+}
+
 Vector2::Vector2(double x, double y)
 {
     this->x = x;
     this->y = y;
 }
 
-double Vector2::getX(){
+double Vector2::getX() const{
     return this->x;
 }
 
-double Vector2::getY(){
+double Vector2::getY() const{
     return this->y;
 }
 
@@ -24,30 +29,29 @@ void Vector2::setY(double y){
 
 
 Vector2 Vector2::operator +(const double val) const {
-    Vector2 result = Vector2(0,0);
+    Vector2 result;
     result.setX(this->x + val);
     result.setY(this->y + val);
     return result;
 }
 
 Vector2 Vector2::operator *(const double val) const {
-    Vector2 result = Vector2(0,0);
+    Vector2 result;
     result.setX(this->x * val);
     result.setY(this->y * val);
     return result;
 }
 
 
-Vector2 Vector2::operator +(const Vector2& vec) const {
-    Vector2 result = Vector2(0,0);
-    result.setX(this->x + vec.getX());
-    result.setY(this->y + vec.getY());
+Vector2 Vector2::operator *(const Vector2& vec) const{
+    Vector2 result;
+    result.setX(getX() * vec.getX());
+    result.setY(getY() * vec.getY());
     return result;
 }
-
-Vector2 Vector2::operator *(const Vector2& vec) const {
-    Vector2 result = Vector2(0,0);
-    result.setX(this->x * vec.getX());
-    result.setY(this->y * vec.getY());
+Vector2 Vector2::operator +(const Vector2& vec) const {
+    Vector2 result;
+    result.setX(getX() + vec.getX());
+    result.setY(getY() + vec.getY());
     return result;
 }

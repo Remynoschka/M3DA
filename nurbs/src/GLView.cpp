@@ -236,13 +236,39 @@ void GLView::drawBSpline(){
     int degre = 2;
     n->initializeNodalVector(0,degre);
 
-    n->addControlPoint(Vector2(0.1,0.1));
-    n->addControlPoint(Vector2(0.15,0.25));
-    n->addControlPoint(Vector2(0.22,0.34));
-    n->addControlPoint(Vector2(0.31,0.27));
-    n->addControlPoint(Vector2(0.25,0.10));
+    n->addControlPoint(Vector2(0.4,0.4));
+    n->addControlPoint(Vector2(0.35,0.55));
+    n->addControlPoint(Vector2(0.52,0.64));
+    n->addControlPoint(Vector2(0.61,0.57));
+    n->addControlPoint(Vector2(0.55,0.40));
 
     n->drawBSpline();
+}
+
+void GLView::drawAnimation(){
+    Nurbs * n = new Nurbs();
+    int degre = 2;
+    n->initializeNodalVector(0,degre);
+    n->addControlPoint(Vector2(0.4,0.4));
+    n->addControlPoint(Vector2(0.35,0.55));
+    n->addControlPoint(Vector2(0.52,0.64));
+    n->addControlPoint(Vector2(0.61,0.57));
+    n->addControlPoint(Vector2(0.55,0.40));
+    n->addControlPoint(Vector2(0.75,0.40));
+
+    n->drawAllN(degre);
+    n->drawBSpline();
+
+    double tmin = n->nodalVector.at(n->degre);
+    double tmax  = n->nodalVector.at(n->controlPoints.size());
+    n->drawAnimationBSpline(time);
+    n->drawAnimationN(time);
+
+    // reinit du time
+    if (time > tmax - tmin){
+        cout << "time" << endl;
+        time = 0.0;
+    }
 }
 
 void GLView::paintGL() {
@@ -261,7 +287,8 @@ void GLView::paintGL() {
         drawBSpline();
         break;
     case 2:
-
+        drawAnimation();
+        time+=0.1;
         break;
     case 3:
 

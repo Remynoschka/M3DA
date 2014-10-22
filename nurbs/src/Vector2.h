@@ -4,9 +4,10 @@
 class Vector2
 {
 public:
+    Vector2();
     Vector2(double x, double y);
-    double getX();
-    double getY();
+    double getX() const;
+    double getY() const;
     void setX(double x);
     void setY(double y);
     Vector2 operator +(const double val) const;
