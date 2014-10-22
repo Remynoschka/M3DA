@@ -52,7 +52,8 @@ SOURCES += \
     src/GLView.cpp \
     src/Error.cpp \
     src/Vector2.cpp \
-    src/Nurbs.cpp
+    src/Nurbs.cpp \
+    src/Vector3.cpp
 
 HEADERS += \
     src/UtilGL.h \
@@ -61,4 +62,5 @@ HEADERS += \
     src/glsupport.h \
     src/Error.h \
     src/Vector2.h \
-    src/nurbs.h
+    src/nurbs.h \
+    src/Vector3.h

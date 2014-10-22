@@ -1,7 +1,7 @@
 #include "nurbs.h"
 #include <vector>
 #include <cmath>
-#include "Vector2.h"
+#include "Vector3.h"
 Nurbs::Nurbs()
 {
 }
@@ -12,6 +12,27 @@ void Nurbs::initializeNodalVector(int nbPoints, int degre){
     for (int i = 0 ; i < nbPoints + degre + 1 ; i++){
         this->nodalVector.push_back(i+1);
     }
+}
+
+/**
+ * PART1/Q11
+ * @brief Nurbs::initializeNodalVectorNU
+ * @param nbPoints
+ * @param degre
+ */
+void Nurbs::initializeNodalVectorNU(int nbPoints, int degre){
+    this->degre = degre;
+    nodalVector.clear();
+    for (int i = 0 ; i < nbPoints + degre + 1 ; i++){
+        int cpt = 0;
+//        cout << "-----" << endl;
+        while (nodalVector.size() < nbPoints+degre+1 && cpt < i*i){
+//            cout << "i = " << i <<endl;
+            this->nodalVector.push_back(i);
+            cpt++;
+        }
+    }
+//    cout << nodalVector.size() << endl;
 }
 
 /**
@@ -78,9 +99,9 @@ void Nurbs::drawN(int k, int p){
     glColor3f(0,1,0);
     glBegin(GL_POINTS);
 
-    for (int i = 0; i < nodalVector.size(); i++) {
-        glVertex2f(nodalVector.at(i)/ nodalVector.size() / 2,0);
-        //cout << nodalVector.at(i)/ nodalVector.size() << endl;
+    for (double i = 0; i < nodalVector.size(); i++) {
+        glVertex2f((i+1)/ nodalVector.size() / 2,0);
+//        cout << nodalVector.at(i)/ nodalVector.size() << endl;
     }
     glEnd();
     glFlush();
@@ -104,10 +125,21 @@ void Nurbs::drawAllN(int p){
  * @brief addControlPoint :ajoute un point de controle
  * @param point : point a ajoute
  */
-void Nurbs::addControlPoint(Vector2 point){
+void Nurbs::addControlPoint(Vector3 point){
     this->controlPoints.push_back(point);
     initializeNodalVector(controlPoints.size(), degre);
 }
+
+/**
+ * PART1/Q11
+ * @brief addControlPoint :ajoute un point de controle
+ * @param point : point a ajoute
+ */
+void Nurbs::addControlPointNU(Vector3 point){
+    this->controlPoints.push_back(point);
+    initializeNodalVectorNU(controlPoints.size(), degre);
+}
+
 
 /**
  *PART1/Q7Q9
@@ -141,7 +173,7 @@ void Nurbs::drawBSpline(){
     int tmax = nodalVector.at(controlPoints.size());
     // cout << tmin << "/" << tmax << endl;
     for (double t = tmin; t <= tmax; t+=0.1) {
-        Vector2 point = evalBSpline(t);
+        Vector3 point = evalBSpline(t);
         glVertex2d(point.getX(), point.getY());
     }
     glEnd();
@@ -158,8 +190,8 @@ void Nurbs::drawBSpline(){
  * @param t : valeur a calculee
  * @return la somme du calcul de la courbe
  */
-Vector2 Nurbs::evalBSpline(double t){
-    Vector2 sum = Vector2(0,0);
+Vector3 Nurbs::evalBSpline(double t){
+    Vector3 sum;
     for (int k = 0 ; k < controlPoints.size() ; k++){
         sum = sum + (controlPoints.at(k) * evaluate(degre, k, t));
     }
@@ -179,7 +211,7 @@ void Nurbs::drawAnimationBSpline(double time){
     glPointSize(5);
     glColor3f(1,0,1);
     // anim b-spline
-    Vector2 point = evalBSpline(tmin + time);
+    Vector3 point = evalBSpline(tmin + time);
     glVertex2d(point.getX(), point.getY());
 
     glEnd();
@@ -200,11 +232,10 @@ void Nurbs::drawAnimationN(double time){
     glColor3f(1,0,1);
     double tmin = nodalVector.at(0);
     for (int k = 0 ; k < nodalVector.size()-degre-1; k++){
-        for (double t = tmin+k; t < tmin+k+degre+1 ; t+=0.1){
-            double y = evaluate(degre,k,t);
-            double x = (t) / nodalVector.size() / 2;
+            double y = evaluate(degre,k,tmin+k+time);
+            double x = ((tmin+k+time) / nodalVector.size() / 2);
             glVertex2d(x,y);
-        }
+
     }
     glEnd();
     glFlush();

@@ -61,6 +61,8 @@ protected:
   void drawFuncBSpline();
   void drawBSpline();
   void drawAnimation();
+  void drawNonUniform();
+  void drawOpenUniform();
   // etc ... void drawChoice2();
 
 private:
