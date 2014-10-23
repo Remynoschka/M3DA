@@ -44,6 +44,8 @@ MainWindow::MainWindow() :
   _choice.push_back(new QPushButton("draw something")); // choice 0
   _choice.push_back(new QPushButton("draw a square")); // choice 1
   _choice.push_back(new QPushButton("Courbe")); // ...
+  _choice.push_back(new QPushButton("Chaikin"));
+  _choice.push_back(new QPushButton("4-point"));
 
 
   // set up for the main window : set a central widget (main container), and set a gridLayout to this central widget

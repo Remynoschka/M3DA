@@ -14,6 +14,7 @@
 
 #include "UtilGL.h"
 #include <QtEvents>
+
 #include "Courbe.h"
 
 
@@ -60,6 +61,8 @@ protected:
   void drawChoice0();
   void drawChoice1();
   void drawCourbe();
+  void drawChaikin();
+  void draw4Point();
 
   // etc ... void drawChoice2();
 

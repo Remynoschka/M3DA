@@ -52,7 +52,8 @@ SOURCES += \
     src/GLView.cpp \
     src/Error.cpp \
     src/Courbe.cpp \
-    src/Vector2.cpp
+    src/Vector2.cpp \
+    src/Point.cpp
 
 HEADERS += \
     src/UtilGL.h \
@@ -61,4 +62,5 @@ HEADERS += \
     src/glsupport.h \
     src/Error.h \
     src/Courbe.h \
-    src/Vector2.h
+    src/Vector2.h \
+    src/Point.h

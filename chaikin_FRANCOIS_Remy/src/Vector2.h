@@ -4,14 +4,20 @@
 class Vector2
 {
 public:
-    Vector2(int x, int y);
-    int getX();
-    int getY();
-    void setX(int x);
-    void setY(int y);
+    Vector2();
+    Vector2(double x, double y);
+    double getX() const;
+    double getY() const;
+    void setX(double x);
+    void setY(double y);
+    Vector2 operator +(const double val) const;
+    Vector2 operator *(const double val) const;
+
+    Vector2 operator +(const Vector2& vec) const;
+    Vector2 operator *(const Vector2& vec) const;
 private:
-    int x;
-    int y;
+    double x;
+    double y;
 };
 
 
