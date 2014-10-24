@@ -127,7 +127,10 @@ void GLApplication::draw() {
     case 1:drawCrossSection();break;
     case 2:case 4:case 6:drawCylinder();break;
 
-    case 3:drawInputPath();break;
+    case 3:
+//        drawInputPath();
+        drawSpline();
+        break;
 
     case 5:drawCrossSection();break;
     default:break;
@@ -248,11 +251,11 @@ void GLApplication::pathSegment() {
     //    _inputPath.push_back(Vector3(0,0,-2));
     //    _inputPath.push_back(Vector3(0,0,2));
 
-        _inputPath.clear();
-        _inputPath.push_back(Vector3(-2,0,-2));
-        _inputPath.push_back(Vector3(2,0,2));
+    //    _inputPath.clear();
+    //    _inputPath.push_back(Vector3(-2,0,-2));
+    //    _inputPath.push_back(Vector3(2,0,2));
 
-    //_inputPath.clear(); _inputPath.push_back(Vector3(-2,0,-2)); _inputPath.push_back(Vector3(0,0,2)); _inputPath.push_back(Vector3(2,0,-1));
+    _inputPath.clear(); _inputPath.push_back(Vector3(-2,0,-2)); _inputPath.push_back(Vector3(0,0,2)); _inputPath.push_back(Vector3(2,0,-1));
 }
 
 void GLApplication::pathCircle() {
@@ -309,6 +312,7 @@ void GLApplication::drawCylinder() {
 
 
 void GLApplication::drawSpline() {
+    cout << " - draw Spline - " << endl;
     if (_inputPath.size()>=2) {
         vector<Vector3> toDraw;
         toDraw.clear();
@@ -334,44 +338,50 @@ void GLApplication::drawSpline() {
 /** ************************************************************************* **/
 
 Vector3 GLApplication::transform(const Vector3 &p,const Vector3 &n) {
-    Vector3 result;
-    double x = p.x() + n.x() ;
-    double y = p.y() + n.y();
-    double z = n.z() -(p.x() * n.x() + p.y() * n.y())/n.z();
-    //x1*x2 + y1*y2 + z1*z2 = 0
-    //x1*x2 + y1*y2 = - z1*z2
-    //- (x1*x2 + y1*y2) /z1 = z2
-
-
-    cout << x << "/"<< y << "/" << z << endl;
-
-    result = Vector3(x,y,z);
-
-    return result;
+    Matrix4 m;
+    m.set(Vector3(0,0,0),
+          normalize(Vector3(1,0,0).cross(n)),
+          normalize(n.cross(normalize(Vector3(1,0,0).cross(n)))),
+          (Vector3)normalize(n));
+    return m.transformPoint(p);
 }
 
 
 
 Vector3 GLApplication::pointSpline(double tNormalized) {
-    Vector3 result;
-
-    return result;
+    int i = tNormalized * (_inputPath.size() - 1);
+    cout <<"t:"<< tNormalized << "/i:"<< i << endl;
+    Vector3 p0 = _inputPath.at(i);
+    Vector3 p1 = _inputPath.at(i + 1);
+    Vector3 t0 = tangentInputPath(i);
+    Vector3 t1 = tangentInputPath(i + 1);
+    return (tNormalized * tNormalized * tNormalized) * ((2 * p0) - (2 * p1) + t0 + t1)
+            + (tNormalized * tNormalized) * ((-3 * p0) + (3 * p1) - (2 * t0) - t1)
+            + (tNormalized * t0) + p0;
 }
 
 
 Vector3 GLApplication::tangentSpline(double tNormalized) {
-    Vector3 result;
-
-    return result;
+    int i = tNormalized * (_inputPath.size() - 1);
+    cout <<"t:"<< tNormalized << "/i:"<< i << endl;
+    Vector3 p0 = _inputPath.at(i);
+    Vector3 p1 = _inputPath.at(i + 1);
+    Vector3 t0 = tangentInputPath(i);
+    Vector3 t1 = tangentInputPath(i + 1);
+    return (tNormalized * tNormalized * tNormalized) * ((2 * p0) - (2 * p1) + t0 + t1)
+            + (tNormalized * tNormalized) * ((-3 * p0) + (3 * p1) - (2 * t0) - t1)
+            + (tNormalized * t0) + p0;
 }
 
 
 
 Vector3 GLApplication::tangentInputPath(unsigned int i) {
-    Vector3 result;
-
-
-    return result;
+    if(i == 0 )
+        return _inputPath.at(i+1)-_inputPath.at(i);
+    else if(i == _inputPath.size()-1)
+        return _inputPath.at(i) - _inputPath.at(i-1);
+    else
+        return _inputPath.at(i+1) - _inputPath.at(i-1);
 }
 
 /** ************************************************************************* **/
@@ -391,14 +401,15 @@ void GLApplication::extrudeLineStrip() {
 
     // Profil : _inputCrossSection
     // Directrice : _inputPath
-    int nbStacks = 2;
+    int nbStacks = _inputPath.size();
 
-    for(int i = 0 ; i < nbStacks ; i++){
+    for(double i = 0 ; i < nbStacks ; i++){
+        Vector3 dir = tangentInputPath(i);
         for (Vector2 v : _inputCrossSection){
-            Vector3 p = Vector3(v.x(), v.y(), _inputPath.at(i).z());
-            p = transform(p, _inputPath.at(i));
+            Vector3 p = Vector3(v.x(), v.y(), 0);
+            p = transform(p, dir);
 
-            _extrude.push_back(p);
+            _extrude.push_back(p + _inputPath.at(i));
 
         }
 
@@ -411,6 +422,22 @@ void GLApplication::extrudeSpline() {
 
     _extrude.clear();
     _normalExtrude.clear(); // for lighting (last question)
+
+    int nbStacks = _inputPath.size();
+
+    for(double i = 0 ; i < nbStacks ; i++){
+        double t = i/_inputPath.size();
+        cout << t << endl;
+        Vector3 dir = tangentSpline(t);
+        for (Vector2 v : _inputCrossSection){
+            Vector3 p = Vector3(v.x(), v.y(), 0);
+            p = transform(p, dir);
+
+            _extrude.push_back(p + pointSpline(t));
+
+        }
+
+    }
 
 
 }
