@@ -87,7 +87,7 @@ void Courbe::subdivizeChaikin(){
  */
 void Courbe::subdivize4Point(){
     if (closed){
-        cout << "Subdivise" << endl;
+        cout << "Subdivise 4pts" << endl;
         if (nbSubdivisions == 0){
             for (int i = 0 ; i < points.size()-1 ; i++){
                 // cas du premier point
@@ -114,7 +114,7 @@ void Courbe::subdivize4Point(){
                                                         dynamic_cast<Point&>(points.at(i)).getCoordonnees(),
                                                         dynamic_cast<Point&>(points.at(i+1)).getCoordonnees(),
                                                         dynamic_cast<Point&>(points.at(i+2)).getCoordonnees())){
-                        subdivizedPoints.push_back(Point(point.getX(), point.getX(), false));
+                        subdivizedPoints.push_back(Point(point.getX(), point.getY(), false));
                     }
                 }
             }

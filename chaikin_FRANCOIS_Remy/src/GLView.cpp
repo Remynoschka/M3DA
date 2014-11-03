@@ -148,7 +148,7 @@ void GLView::keyReleaseEvent(QKeyEvent *event) {
             case 3:
                 courbe.subdivizeChaikin();
                 break;
-            case 4:
+            case 4:                
                 courbe.subdivize4Point();
                 break;
             default:
