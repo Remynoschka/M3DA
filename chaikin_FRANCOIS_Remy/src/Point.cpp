@@ -5,6 +5,12 @@ Point::Point()
 
 }
 
+/**
+ * @brief Point::Point
+ * @param x : coordonnee x du point
+ * @param y : coordonnee y du point
+ * @param fixe : true si c'est un point fixe
+ */
 Point::Point(double x, double y, bool fixe)
 {
     this->coordonnees.setX(x);

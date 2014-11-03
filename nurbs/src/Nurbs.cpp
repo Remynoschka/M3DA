@@ -81,7 +81,7 @@ void Nurbs::drawN(int k, int p){
     // dessiner la courbe
     glBegin(GL_LINE_STRIP);
     glColor3f(1.0f, 0.0f, 0.0f);
-    for (double t = tmin+k; t < tmin+k+p+1 ; t+=0.1){
+    for (double t = tmin+k; t < tmin+k+p+1 ; t += 0.1){
         double y = evaluate(p,k,t);
         double x = (t) / nodalVector.size() / 2;
 
