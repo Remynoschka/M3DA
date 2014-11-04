@@ -1,12 +1,8 @@
 #include "GLApplication.h"
 #include "GLTool.h"
-
 #include "Vector3.h"
 #include "Vector2.h"
-
-
 #include <iostream>
-
 /*!
 *
 * @file
@@ -15,45 +11,35 @@
 * @author F. Aubert
 *
 */
-
-
 using namespace std;
 using namespace p3d;
-
 GLApplication::~GLApplication() {
 }
-
 GLApplication::GLApplication() {
     //
     _leftPanelMenu << "Draw square" << "Cross-section = circle" << "Draw cylinder (path as strip line)" << "Mouse Input Path" << "Draw cylinder (path as spline)" << "Mouse Input Section" << "Draw revolution";
     _activeMenu=0;
-
     _inputPath.clear();
     _inputCrossSection.clear();
-
     _camera2D.ortho(-2,2,-2,2,0,1);
     _camera3D.frustum(-_frustum,_frustum,-_frustum,_frustum,0.03,1000);
     _camera3D.position(0,0,10);
     _camera3D.lookAt(Vector3(0,0,0));
-
 }
 
 
 /** ********************************************************************** **/
+
+
 void GLApplication::initialize() {
     // appelée 1 seule fois à l'initialisation du contexte
     // => initialisations OpenGL
     glClearColor(1,1,1,1);
-
     glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
-
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glClearDepth(1);
-
     p3d::initGLTool();
-
-    // ...
 }
 
 void GLApplication::resize(int width,int height) {
@@ -70,7 +56,6 @@ void GLApplication::update() {
     // => mettre à jour les données de l'application
     // avant l'affichage de la prochaine image (animation)
     // ...
-
     if (_activeMenu==3) {
         if (mouseLeftPressed()) {
             _inputPath.push_back(_camera2D.windowToWorld(mouseX(),mouseY()));
@@ -86,7 +71,7 @@ void GLApplication::update() {
     }
 }
 
-/* ************************************************************ */
+/** ************************************************************ */
 
 void GLApplication::updateCamera() {
     if (mouseLeft()) {
@@ -97,6 +82,7 @@ void GLApplication::updateCamera() {
         _camera3D.rotate(deltaMouseY()/2.0,Vector3(1,0,0),Coordinate_Local);
         _camera3D.translate(-center,Coordinate_Local);
     }
+
     if (left()) _camera3D.left(0.3);
     if (right()) _camera3D.right(0.3);
     if (forward()) _camera3D.forward(0.3);
@@ -111,55 +97,47 @@ void GLApplication::updateCamera() {
     }
 }
 
-
 void GLApplication::draw() {
     // appelée après chaque update
     // => tracer toute l'image
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     if (_activeMenu==2 || _activeMenu==4 || _activeMenu==6)
         p3d::apply(_camera3D);
     else
         p3d::apply(_camera2D);
-
     switch(_activeMenu) {
     case 0:drawSquare();break;
     case 1:drawCrossSection();break;
     case 2:case 4:case 6:drawCylinder();break;
-
-    case 3:
-        //        drawInputPath();
-        drawSpline();
-        break;
-
+    case 3:drawSpline();break;
     case 5:drawCrossSection();break;
     default:break;
     }
 }
 
 /** ********************************************************************** **/
-/** i = button number, s = button text
+
+/** i = button number,
+ * s = button text
  */
 void GLApplication::leftPanel(int i,const std::string &s) {
     _activeMenu=i;
-
+    cout << _activeMenu << endl;
     switch (_activeMenu) {
     case 1: // button "Define cross section"
-
-        //crossSectionSquare();
+        // crossSectionSquare();
         crossSectionCircle();
         break;
     case 2: // button "Draw cylinder (strip line)"
-
         pathSegment();
         crossSectionCircle();
-
         extrudeLineStrip();
         break;
+    case 3:
+        // _inputPath.clear(); //
+        break;
     case 4: // button "Draw cylinder (spline)"
-
         crossSectionCircle();
-
         extrudeSpline();
         break;
     case 6: // button "Draw revolution"
@@ -168,19 +146,18 @@ void GLApplication::leftPanel(int i,const std::string &s) {
         break;
     default:break;
     }
-
     /*
-  switch (i) {
+    switch (i) {
     case 0:...;break;
     case 1:...;break;
     ...
-  }
-  */
+    }
+    */
 }
 
 /** ************************************************************************ **/
-void GLApplication::drawSquare() {
 
+void GLApplication::drawSquare() {
     // compute points of the square
     vector<Vector2> pts;
     pts.resize(5);
@@ -189,25 +166,19 @@ void GLApplication::drawSquare() {
     pts[2]=Vector2(0.5,0.5);
     pts[3]=Vector2(-0.5,0.5);
     pts[4]=pts[0];
-
     // draw square
     p3d::ambientColor=Vector4(1,0,0,1);
     p3d::shaderVertexAmbient();
     p3d::drawLineStrip(pts,5);
-
     // draw vertices (points)
     glPointSize(10);
     p3d::ambientColor=Vector4(0,0,1,1);
     p3d::shaderVertexAmbient();
     p3d::drawPoints(pts);
-
     // draw text
     p3d::ambientColor=Vector4(1,0,1,1);
     p3d::draw("V0",Vector3(pts[0],0));
-
-
 }
-
 
 /** ************************************************************************ **/
 
@@ -225,28 +196,19 @@ void GLApplication::crossSectionCircle() {
 
     int r = 1, nbSclices = 20;
 
-    for(int i = -1; i < nbSclices; i++)
-
-    {
-
+    for(int i = -1; i < nbSclices; i++)    {
         float theta = 2.0f * 3.1415926f * float(i) / float(nbSclices);
-
         float x = r * cosf(theta);
-
         float y = r * sinf(theta);
-
         _inputCrossSection.push_back(Vector2(x + r/2, y + r/2));
-
     }
 
 
 }
 
-
 /** ************************************************************************ **/
 
 void GLApplication::pathSegment() {
-
     //    _inputPath.clear();
     //    _inputPath.push_back(Vector3(0,0,-2));
     //    _inputPath.push_back(Vector3(0,0,2));
@@ -255,18 +217,28 @@ void GLApplication::pathSegment() {
     //    _inputPath.push_back(Vector3(-2,0,-2));
     //    _inputPath.push_back(Vector3(2,0,2));
 
-    _inputPath.clear(); _inputPath.push_back(Vector3(-2,0,-2)); _inputPath.push_back(Vector3(0,0,2)); _inputPath.push_back(Vector3(2,0,-1));
+    _inputPath.clear();
+    _inputPath.push_back(Vector3(0,0,2));
+    _inputPath.push_back(Vector3(2,0,-1));
+    _inputPath.push_back(Vector3(-2,0,-2));
 }
 
-void GLApplication::pathCircle() {
-    double step = 2*M_PI/45;
-    double angle = 0;
-    for (int i = 0; i <= 45+1; i++){
 
-        Vector3 p= p3d::Vector3(0,sin(angle),cos(angle));
-        _inputPath.push_back(p);
-        angle+= step;
+void GLApplication::pathCircle() {
+    _inputPath.clear();
+
+    int r = 1, nbSclices = 20;
+
+    for(int i = -1; i <= nbSclices; i++){
+
+        float theta = 2.0f * 3.1415926f * float(i) / float(nbSclices);
+        float x = r * cosf(theta);
+        float y = r * sinf(theta);
+        _inputPath.push_back(Vector3(0.0f, (x + r/2), (y + r/2)));
+
     }
+
+
 }
 
 /** ************************************************************************ **/
@@ -280,15 +252,14 @@ void GLApplication::drawCrossSection() {
     drawLineStrip(toDraw);
 }
 
+
 void GLApplication::drawInputPath() {
     if (_inputPath.size()<1) return;
-
     p3d::ambientColor=Vector4(0,0,1,1);
     p3d::shaderVertexAmbient();
     p3d::drawPoints(_inputPath);
     p3d::drawLineStrip(_inputPath);
 }
-
 
 void GLApplication::drawCylinder() {
     if (_extrude.size()<4) return;
@@ -297,26 +268,21 @@ void GLApplication::drawCylinder() {
     p3d::ambientColor=Vector4(1,0,0,1);
     p3d::shaderVertexAmbient();
 
-
     drawGrid(_extrude,nbSlice);
 
-    /*
-   *  uncomment once normals computed
-  p3d::lightPosition[0]=Vector4(0,0,10,1);
-  p3d::lightIntensity[0]=1.0;
-  p3d::material(Vector4(0,0,0.3,1),Vector3(0,0.2,0.8),Vector3(0,0.8,0.3),100);
-  p3d::diffuseBackColor=Vector3(0.8,0,0);
-  p3d::shaderLightPhong();
-  fillGrid(_extrude,_normalExtrude,nbSlice);
-  */
+    /* uncomment once normals computed
+     *
+    p3d::lightPosition[0]=Vector4(0,0,10,1);
+    p3d::lightIntensity[0]=1.0;
+    p3d::material(Vector4(0,0,0.3,1),Vector3(0,0.2,0.8),Vector3(0,0.8,0.3),100);
+    p3d::diffuseBackColor=Vector3(0.8,0,0);
+    p3d::shaderLightPhong();
+    fillGrid(_extrude,_normalExtrude,nbSlice);
 
-
-
-    drawInputPath();
-
+    */
+    // drawInputPath();
+    drawSpline();
 }
-
-
 
 void GLApplication::drawSpline() {
     cout << " - draw Spline - " << endl;
@@ -353,14 +319,12 @@ Vector3 GLApplication::transform(const Vector3 &p,const Vector3 &n) {
     return m.transformPoint(p);
 }
 
-
-
 Vector3 GLApplication::pointSpline(double tNormalized) {
     double size = _inputPath.size();
     int i = floor(tNormalized * (size - 1));
     //cout <<"tNormalized:"<< tNormalized << "/i:"<< i << endl;
-    Vector3 p0 = _inputPath.at(i);
-    Vector3 p1 = _inputPath.at(i + 1);
+    Vector3 p0 = _inputPath[i];
+    Vector3 p1 = _inputPath[i + 1];
     Vector3 t0 = tangentInputPath(i);
     Vector3 t1 = tangentInputPath(i + 1);
 
@@ -371,27 +335,25 @@ Vector3 GLApplication::pointSpline(double tNormalized) {
             + (t * t0) + p0;
 }
 
-
 Vector3 GLApplication::tangentSpline(double tNormalized) {
-
-    if((int)tNormalized == 0 )
-        return pointSpline((int)tNormalized+0.01)-pointSpline((int)tNormalized);
-    else if((int)tNormalized == _inputPath.size()-0.01)
-        return _inputPath.at((int)tNormalized) - _inputPath.at((int)tNormalized-0.01);
+    if(tNormalized == 0 )
+        return pointSpline(tNormalized+0.01)-pointSpline(tNormalized);
+    else if(tNormalized == 1)
+        return pointSpline(tNormalized) - pointSpline(tNormalized-0.01);
     else
-        return _inputPath.at((int)tNormalized+0.01) - _inputPath.at((int)tNormalized-0.01);
-
+        return pointSpline(tNormalized+0.01) - pointSpline(tNormalized-0.01);
 }
 
 
 
+
 Vector3 GLApplication::tangentInputPath(unsigned int i) {
-    if(i == 0 )
-        return _inputPath.at(i+1)-_inputPath.at(i);
-    else if(i == _inputPath.size()-1)
-        return _inputPath.at(i) - _inputPath.at(i-1);
+    if(i==0 )
+        return _inputPath[i+1]-_inputPath[i];
+    else if(i==_inputPath.size()-1)
+        return _inputPath[i]-_inputPath[i-1];
     else
-        return _inputPath.at(i+1) - _inputPath.at(i-1);
+        return _inputPath[i+1]-_inputPath[i-1];
 }
 
 /** ************************************************************************* **/
@@ -401,7 +363,6 @@ void GLApplication::normalCrossSection() {
 
 
 }
-
 
 void GLApplication::extrudeLineStrip() {
     if (_inputPath.size()<1 || _inputCrossSection.size()<1) return;
@@ -424,6 +385,7 @@ void GLApplication::extrudeLineStrip() {
         }
 
     }
+
 
 }
 
@@ -448,13 +410,8 @@ void GLApplication::extrudeSpline() {
 
 }
 
-
 /** ************************************************************************* **/
-
 
 double GLApplication::scale(double tNormalized) {
     return 1.0;
-
 }
-
-
