@@ -47,7 +47,7 @@ vector<Point> Courbe::getPoints(){
 void Courbe::subdivizeChaikin(){
     if (nbSubdivisions == 0){
         for (int i = 0 ; i < points.size()-1 ; i++){
-            if (dynamic_cast<Point&>(points.at(i)).isPointFixe()){
+            if (dynamic_cast<Point&>(points.at(i)).isPointFixe()){               
                 subdivizedPoints.push_back(points.at(i));
                 Vector2 q2 = calculateChaikin(dynamic_cast<Point&>(points.at(i)).getCoordonnees(), dynamic_cast<Point&>(points.at(i+1)).getCoordonnees()).at(1);
                 subdivizedPoints.push_back(Point(q2.getX(), q2.getY(), false));

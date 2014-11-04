@@ -287,7 +287,27 @@ void GLView::drawNonUniform(){
 }
 
 void GLView::drawOpenUniform(){
+    Nurbs * n = new Nurbs();
+    int degre = 2;
+    n->initializeNodalVector(4,2);
 
+    n->controlPoints.push_back(Vector3(0.4,0.4,1.0));
+    n->controlPoints.push_back(Vector3(0.35,0.55,1.0));
+    n->controlPoints.push_back(Vector3(0.52,0.64,1.0));
+    n->controlPoints.push_back(Vector3(0.61,0.57,1.0));
+
+    n->nodalVector.clear();
+
+    n->nodalVector.push_back(0);
+    n->nodalVector.push_back(0);
+    n->nodalVector.push_back(0);
+    n->nodalVector.push_back(1);
+    n->nodalVector.push_back(2);
+    n->nodalVector.push_back(2);
+    n->nodalVector.push_back(2);
+
+    n->drawAllN(degre);
+    n->drawBSpline();
 }
 
 void GLView::paintGL() {
@@ -313,7 +333,7 @@ void GLView::paintGL() {
         drawNonUniform();
         break;
     case 4:
-
+        drawOpenUniform();
         break;
     }
 

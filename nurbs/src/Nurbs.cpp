@@ -35,6 +35,7 @@ void Nurbs::initializeNodalVectorNU(int nbPoints, int degre){
 //    cout << nodalVector.size() << endl;
 }
 
+
 /**
  * Part1 / Q2
  * @brief Nurbs::evaluate
